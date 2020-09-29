@@ -1,21 +1,23 @@
-from urllib.request import urlopen
+import urllib.request
 import time
+import sys
 from termcolor import colored
 
+sleeptime = 30
 cval = 0
 color = ""
 startprice = 0
 
 def getstartprice():
     global startprice
-    response = urlopen('https://blockchain.info/tobtc?currency=TRY&value=100')
+    response = urllib.request.urlopen('https://blockchain.info/tobtc?currency=TRY&value=100')
     html_doc = response.read()
     html_doc = html_doc.decode('utf-8')
     startprice = int(100/(float(html_doc)))
 
 def pricecalc():
     global cval, color
-    response = urlopen('https://blockchain.info/tobtc?currency=TRY&value=100')
+    response = urllib.request.urlopen('https://blockchain.info/tobtc?currency=TRY&value=100')
     html_doc = response.read()
     html_doc = html_doc.decode('utf-8')
     price = int(100/(float(html_doc)))
@@ -33,6 +35,10 @@ def pricecalc():
         print(colored(price, color) , "Net difference of" , (nval - startprice))
 
 getstartprice()
+
+if len(sys.argv) > 1:
+    sleeptime = sys.argv[1]
+
 while(True):
     pricecalc()
-    time.sleep(30)
+    time.sleep(int(sleeptime))
